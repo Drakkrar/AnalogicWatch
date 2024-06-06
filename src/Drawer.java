@@ -1,34 +1,24 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.Calendar;
 import java.util.TimeZone;
 
 public class Drawer extends JPanel {
-    public String zona;
-    Color color1, color2, color3, color4, color5, color6, color7, color8;
-    GradientPaint de1, de2, de3, de4;
+    public final String zona;
+    Color colorEmerald;
+
 
     private int horas, minutos, segundos;
-    private static final int esp = 10;
+
     private static final float tresp = (float) (3.0 * Math.PI);
     private static final float rad = (float) (Math.PI / 30.0);
     private int tam, centrox, centroy;
-    private BufferedImage muestra;
-    private javax.swing.Timer t;
 
-    public Image img;
+    private final javax.swing.Timer t;
 
     public Drawer(String zonaHoraria) {
         zona = zonaHoraria;
-        t = new javax.swing.Timer(1000, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent ae) {
-                repaint();
-            }
-        });
+        t = new javax.swing.Timer(1000, ae -> repaint());
     }
 
     public void mreloj() {
@@ -44,7 +34,7 @@ public class Drawer extends JPanel {
         int ancho = getWidth();
         int alto = getHeight();
 
-        tam = ((ancho < alto) ? ancho : alto) - 2 * 192;
+        tam = (Math.min(ancho, alto)) - 2 * 192;
         centrox = this.getWidth() / 2;
         centroy = this.getWidth() / 2;
         disreloj(g);
@@ -60,20 +50,15 @@ public class Drawer extends JPanel {
 
     public void disreloj(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        color1 = (new Color(232, 218, 211));
-        color2 = (new Color(129, 78, 37));
-        color3 = (new Color(185, 140, 101));
-        color4 = (new Color(76, 59, 20));
-        color5 = (new Color(132, 21, 21));
-        color6 = (new Color(225, 172, 0));
-        color7 = (new Color(69, 179, 157));
-        color8 = (new Color(14, 102, 85));
-        de1 = new GradientPaint(0, 100, color5, 0, 225, color4, true);
-        de2 = new GradientPaint(0, 200, color3, 0, 225, Color.white, true);
-        de3 = new GradientPaint(0, 155, color3, 0, 225, color4, true);
-        de4 = new GradientPaint(0, 155, color7, 0, 225, color8, true);
+        double radio = 75; // Radio del círculo
+        double anguloInicial = -Math.PI / 2; // Ángulo inicial (12 en el reloj)
+        double incrementoAngulo = 2 * Math.PI / 12; // Incremento del ángulo para cada número
+        Font font = new Font("Arial", Font.BOLD, 16);
+        Font font2 = new Font("Arial", Font.BOLD, 12);
 
-        g2.setPaint(color8);
+        colorEmerald = (new Color(14, 102, 85));
+
+        g2.setPaint(colorEmerald);
         for (int seg = 0; seg < 60; seg++) {
             int inicio;
             if (seg % 5 == 0) {
@@ -88,28 +73,20 @@ public class Drawer extends JPanel {
             dis(g, centrox, centroy, rad * seg, inicio, tam / 2);
         }
 
-        g.setColor(color8);
-        Font font = new Font("Arial", Font.BOLD, 16);
+        g.setColor(colorEmerald);
         g.setFont(font);
-        g.drawString("12", centrox - 8, centroy - 75);
-        g.drawString("1", centrox + 32, centroy - 65);
-        g.drawString("2", centrox + 63, centroy - 35);
-        g.drawString("3", centrox + 80, centroy + 5);
-        g.drawString("4", centrox + 65, centroy + 45);
-        g.drawString("5", centrox + 38, centroy + 75);
-        g.drawString("6", centrox - 2, centroy + 88);
-        g.drawString("7", centrox - 42, centroy + 75);
-        g.drawString("8", centrox - 72, centroy + 45);
-        g.drawString("9", centrox - 85, centroy + 5);
-        g.drawString("10", centrox - 75, centroy - 35);
-        g.drawString("11", centrox - 47, centroy - 63);
-        Font font2 = new Font("Arial", Font.BOLD, 12);
+        for (int i = 1; i <= 12; i++) {
+            double angulo = anguloInicial + i * incrementoAngulo;
+            int x = centrox + (int) (radio * Math.cos(angulo));
+            int y = centroy + (int) (radio * Math.sin(angulo));
+            g.drawString(Integer.toString(i), x, y);
+        }
         g.setFont(font2);
     }
 
     private void man(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
-        g2.setPaint(color8);//color de manecillas
+        g2.setPaint(colorEmerald);//color de manecillas
         g2.setStroke(new BasicStroke(1));//grosor de segundero
         float fsegundos = segundos;
         float anguloSegundero = tresp - (rad * fsegundos);

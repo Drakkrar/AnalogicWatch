@@ -1,9 +1,8 @@
 import javax.swing.*;
-import java.awt.Dimension;
 
 public class WatchUI {
     // TODO: Replace this for a method that obtains 30 timezones calling an api and saving inside of timeZones array.
-    public static String[] timeZones = {
+    public static final String[] timeZones = {
             "Europe/Moscow",
             "Europe/Paris",
             "Europe/Berlin",
@@ -20,7 +19,7 @@ public class WatchUI {
     private JLabel labelTitle;
 
     public WatchUI(){
-        labelTitle = new JLabel("Global Analogic Watch");
+        this.labelTitle.setText("Global Analogic Watch");
 
         JPanel panelButtons = new JPanel();
 

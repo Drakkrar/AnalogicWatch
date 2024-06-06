@@ -2,7 +2,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import javax.swing.JFrame;
 public class WatchZone extends JFrame implements Runnable {
-    Drawer draw;
+    final Drawer draw;
     public WatchZone(String zona) {
         super(zona);
         setVisible(true);
